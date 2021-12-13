@@ -116,11 +116,14 @@ export const RecentTab: React.FC<RecentTabProps> = ({}) => {
 
     const getRecentsHandler = () => {
         (async () => {
-            const resp = await axios.get('http://localhost:4000/getRecents', {
-                headers: {
-                    'x-auth-token': state.user.token,
-                },
-            });
+            const resp = await axios.get(
+                `${process.env['REACT_APP_BACKEND_URI']}/getRecents`,
+                {
+                    headers: {
+                        'x-auth-token': state.user.token,
+                    },
+                }
+            );
             console.log(resp.data);
             setRecents(resp.data);
         })();

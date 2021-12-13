@@ -31,7 +31,9 @@ import { motion } from 'framer-motion';
 import axios, { AxiosResponse } from 'axios';
 import AppContext from '../context/AppContext';
 import { LoadingModal } from '../components/LoadingModal';
-import { isElementAccessExpression } from 'typescript';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const MotionButton = motion<ButtonProps>(Button);
 
 interface LoginResponseInterface extends AxiosResponse {
@@ -72,11 +74,14 @@ export const Signup: React.FC = () => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             const isValidResp: AxiosResponse<isValidTokenResponseInterface> =
-                await axios.get('http://localhost:4000/api/auth', {
-                    headers: {
-                        'x-auth-token': `${accessToken}`,
-                    },
-                });
+                await axios.get(
+                    `${process.env['REACT_APP_BACKEND_URI']}/api/auth`,
+                    {
+                        headers: {
+                            'x-auth-token': `${accessToken}`,
+                        },
+                    }
+                );
             return { ...isValidResp.data, token: accessToken };
         }
         return false;
@@ -137,7 +142,7 @@ export const Signup: React.FC = () => {
 
         try {
             const response: LoginResponseInterface = await axios.post(
-                'http://localhost:4000/api/users',
+                `${process.env['REACT_APP_BACKEND_URI']}/api/users`,
                 {
                     ...data,
                 }
@@ -286,12 +291,6 @@ export const Signup: React.FC = () => {
                                 )}
                             </InputGroup>
                         </FormControl>
-
-                        {/* <HStack w='full' alignContent={'center'}>
-                            <Text w='full' align={'center'} color='red.300'>
-                                Passwords doesn't match
-                            </Text>
-                        </HStack> */}
 
                         <HStack w='full'>
                             <Spacer />

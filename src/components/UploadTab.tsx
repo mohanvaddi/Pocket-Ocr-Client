@@ -17,6 +17,9 @@ import { Formik, Form } from 'formik';
 import AppContext from './../context/AppContext';
 import { PartialLoadingModal } from './PartialLoadingModal';
 import { ClipboardCopy } from './ClipboardCopy';
+
+import dotenv from 'dotenv';
+dotenv.config();
 interface UploadTabProps {}
 
 const MotionButton = motion<ButtonProps>(Button);
@@ -46,7 +49,7 @@ export const UploadTab: React.FC<UploadTabProps> = () => {
                 }
                 formData.append('lang', values.lang);
                 const resp = await axios.post(
-                    'http://localhost:4000/upload',
+                    `${process.env['REACT_APP_BACKEND_URI']}/upload`,
                     formData,
                     {
                         headers: {

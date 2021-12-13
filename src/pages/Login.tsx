@@ -15,6 +15,7 @@ import {
     Spacer,
     Link,
 } from '@chakra-ui/react';
+
 import { Link as reactlink } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { EmailIcon, UnlockIcon } from '@chakra-ui/icons';
@@ -29,6 +30,9 @@ import { motion } from 'framer-motion';
 import axios, { AxiosResponse } from 'axios';
 import AppContext from '../context/AppContext';
 import { LoadingModal } from '../components/LoadingModal';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const MotionButton = motion<ButtonProps>(Button);
 
 interface LoginResponseInterface extends AxiosResponse {
@@ -58,11 +62,14 @@ export const Login: React.FC = () => {
         const accessToken = localStorage.getItem('accessToken');
         if (accessToken) {
             const isValidResp: AxiosResponse<isValidTokenResponseInterface> =
-                await axios.get('http://localhost:4000/api/auth', {
-                    headers: {
-                        'x-auth-token': `${accessToken}`,
-                    },
-                });
+                await axios.get(
+                    `${process.env['REACT_APP_BACKEND_URI']}/api/auth`,
+                    {
+                        headers: {
+                            'x-auth-token': `${accessToken}`,
+                        },
+                    }
+                );
             return { ...isValidResp.data, token: accessToken };
         }
         return false;
@@ -96,13 +103,15 @@ export const Login: React.FC = () => {
 
     const onLoginHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         const data = {
             email: emailRef.current?.value,
             password: passwdRef.current?.value,
         };
+
         try {
             const response: LoginResponseInterface = await axios.post(
-                'http://localhost:4000/api/auth',
+                `${process.env['REACT_APP_BACKEND_URI']}/api/auth`,
                 {
                     ...data,
                 }
@@ -148,11 +157,7 @@ export const Login: React.FC = () => {
                             <FormLabel>Email</FormLabel>
                             <InputGroup>
                                 <InputLeftElement children={<EmailIcon />} />
-                                <Input
-                                    ref={emailRef}
-                                    type='email'
-                                    isRequired
-                                />
+                                <Input ref={emailRef} type='email' isRequired />
                             </InputGroup>
                         </FormControl>
                         <FormControl id='password'>

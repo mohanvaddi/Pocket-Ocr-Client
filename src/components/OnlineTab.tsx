@@ -44,7 +44,7 @@ export const OnlineTab: React.FC<OnlineTabProps> = () => {
                 console.log(values);
 
                 const resp = await axios.post(
-                    'http://localhost:4000/usingLink',
+                    `${process.env['REACT_APP_BACKEND_URI']}/usingLink`,
                     {
                         lang: values.lang,
                         imgLink: values.imgLink,
